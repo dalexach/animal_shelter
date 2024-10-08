@@ -121,18 +121,12 @@ class ReporteSerializer(serializers.ModelSerializer):
 
 
 class AnimalDetalladoSerializer(AnimalSerializer):
-    datos_veterinarios = DatoVeterinarioSerializer(
-        many=True, read_only=True, source="datoveterinario_registros"
-    )
-    indicadores_salud = IndicadorSaludSerializer(
-        many=True, read_only=True, source="indicadorsalud_registros"
-    )
-    controles_medicos = ControlMedicoSerializer(
-        many=True, read_only=True, source="controlmedico_registros"
-    )
-    seguimientos_condicion = SeguimientoCondicionSerializer(
-        many=True, read_only=True, source="seguimientocondicion_registros"
-    )
+    datos_veterinarios = DatoVeterinarioSerializer(many=True, read_only=True, source='datoveterinario_registros')
+    indicadores_salud = IndicadorSaludSerializer(many=True, read_only=True, source='indicadorsalud_registros')
+    controles_medicos = ControlMedicoSerializer(many=True, read_only=True, source='controlmedico_registros')
+    seguimientos_condicion = SeguimientoCondicionSerializer(many=True, read_only=True, source='seguimientocondicion_registros')
+    ultimo_peso = serializers.SerializerMethodField()
+    ultima_visita_veterinaria = serializers.SerializerMethodField()
 
     class Meta(AnimalSerializer.Meta):
         model = Animal
@@ -142,3 +136,11 @@ class AnimalDetalladoSerializer(AnimalSerializer):
             "controles_medicos",
             "seguimientos_condicion",
         ]
+
+    def get_ultimo_peso(self, obj):
+        ultimo_indicador = obj.indicadorsalud_registros.order_by('-fecha').first()
+        return ultimo_indicador.peso if ultimo_indicador else None
+
+    def get_ultima_visita_veterinaria(self, obj):
+        ultima_visita = obj.datoveterinario_registros.order_by('-fecha').first()
+        return ultima_visita.fecha if ultima_visita else None

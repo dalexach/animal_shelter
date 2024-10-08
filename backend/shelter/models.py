@@ -57,6 +57,15 @@ class Animal(models.Model):
     cuidadores = models.ManyToManyField(Cuidador, related_name="animales")
     imagen = models.ImageField(upload_to="animales/", null=True, blank=True)
     fecha_creacion = models.DateTimeField(auto_now_add=True)
+    sexo = models.CharField(max_length=1, choices=[('M', 'Macho'), ('H', 'Hembra')], null=True, blank=True)
+    edad = models.IntegerField(null=True, blank=True)
+    peso_actual = models.FloatField(null=True, blank=True)
+    estado = models.CharField(max_length=20, choices=[
+        ('SANO', 'Sano'),
+        ('ENFERMO', 'Enfermo'),
+        ('EN_TRATAMIENTO', 'En tratamiento'),
+        ('CUARENTENA', 'En cuarentena')
+    ], default='SANO')
 
     def obtener_historial_salud(self):
         return RegistroSalud.objects.filter(animal=self).order_by("-fecha")
@@ -70,6 +79,9 @@ class Animal(models.Model):
             key=lambda x: x.fecha,
             reverse=True,
         )
+
+    def __str__(self):
+        return f"{self.nombre} - {self.especie}"
 
 
 class RegistroSalud(models.Model):
