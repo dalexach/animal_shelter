@@ -22,7 +22,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'shelter',  # Asegúrate de que tu app 'shelter' esté incluida aquí
+    'drf_yasg',
+    'shelter',
     'rest_framework',
     'corsheaders',
 ]
