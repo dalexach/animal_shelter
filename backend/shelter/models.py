@@ -9,7 +9,7 @@ class Usuario(AbstractUser):
         verbose_name='groups',
         blank=True,
         help_text='The groups this user belongs to. A user will get all permissions granted to each of their groups.',
-        related_name='usuario_set',  # Cambiado de 'user_set' a 'usuario_set'
+        related_name='usuario_set',
         related_query_name='usuario',
     )
     user_permissions = models.ManyToManyField(
@@ -17,7 +17,7 @@ class Usuario(AbstractUser):
         verbose_name='user permissions',
         blank=True,
         help_text='Specific permissions for this user.',
-        related_name='usuario_set',  # Cambiado de 'user_set' a 'usuario_set'
+        related_name='usuario_set',
         related_query_name='usuario',
     )
 
@@ -49,9 +49,20 @@ class Animal(models.Model):
     fecha_nacimiento = models.DateField(null=True, blank=True)
     cuidadores = models.ManyToManyField(Cuidador, related_name='animales')
     imagen = models.ImageField(upload_to='animales/', null=True, blank=True)
+    fecha_creacion = models.DateTimeField(auto_now_add=True)
 
     def obtener_historial_salud(self):
         return RegistroSalud.objects.filter(animal=self).order_by('-fecha')
+
+    def obtener_todos_registros_salud(self):
+        return sorted(
+            list(self.datoveterinario_registros.all()) +
+            list(self.indicadorsalud_registros.all()) +
+            list(self.controlmedico_registros.all()) +
+            list(self.seguimientocondicion_registros.all()),
+            key=lambda x: x.fecha,
+            reverse=True
+        )
 
 class RegistroSalud(models.Model):
     animal = models.ForeignKey(Animal, on_delete=models.CASCADE, related_name='%(class)s_registros')
@@ -59,6 +70,11 @@ class RegistroSalud(models.Model):
     observaciones = models.TextField()
     registrado_por = models.ForeignKey(Cuidador, on_delete=models.SET_NULL, null=True)
     tipo = models.CharField(max_length=50)
+
+    def save(self, *args, **kwargs):
+        if not self.tipo:
+            self.tipo = self.__class__.__name__
+        super().save(*args, **kwargs)
 
     class Meta:
         abstract = True
@@ -68,7 +84,6 @@ class DatoVeterinario(RegistroSalud):
     resultado_examen = models.TextField()
     recomendaciones = models.TextField()
     imagenes = models.JSONField(default=list)
-    tipo = models.CharField(max_length=50, default='DatoVeterinario', editable=False)
 
     class Meta:
         verbose_name = "Dato Veterinario"
@@ -78,7 +93,6 @@ class IndicadorSalud(RegistroSalud):
     peso = models.FloatField(null=True, blank=True)
     vacunas = models.JSONField(default=list)
     estado_fisico = models.CharField(max_length=100)
-    tipo = models.CharField(max_length=50, default='IndicadorSalud', editable=False)
 
     class Meta:
         verbose_name = "Indicador de Salud"
@@ -87,7 +101,6 @@ class IndicadorSalud(RegistroSalud):
 class ControlMedico(RegistroSalud):
     nombre_profesional = models.CharField(max_length=100)
     especialidad = models.CharField(max_length=100)
-    tipo = models.CharField(max_length=50, default='ControlMedico', editable=False)
 
     class Meta:
         verbose_name = "Control Médico"
@@ -98,7 +111,6 @@ class SeguimientoCondicion(RegistroSalud):
     diagnostico = models.TextField()
     tratamiento = models.TextField()
     evolucion = models.TextField()
-    tipo = models.CharField(max_length=50, default='SeguimientoCondicion', editable=False)
 
     class Meta:
         verbose_name = "Seguimiento de Condición"
@@ -124,6 +136,14 @@ class Reporte(models.Model):
     fecha_fin = models.DateField()
     tipo = models.CharField(max_length=10, choices=TIPO_CHOICES)
     generado_por = models.ForeignKey(Administrador, on_delete=models.SET_NULL, null=True)
+    contenido = models.JSONField(default=dict)
+
+    def save(self, *args, **kwargs):
+        if self.tipo == 'ANIMAL':
+            self.contenido = self.generar_reporte_por_animal()
+        elif self.tipo == 'CUIDADOR':
+            self.contenido = self.generar_reporte_por_cuidador()
+        super().save(*args, **kwargs)
 
     def generar_reporte_por_animal(self):
         from django.db.models import Count, Avg

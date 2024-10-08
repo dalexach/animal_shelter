@@ -1,9 +1,13 @@
 import os
 from pathlib import Path
-import dj_database_url
+from dotenv import load_dotenv
+from urllib.parse import urlparse
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+# Cargar variables de entorno
+load_dotenv(os.path.join(BASE_DIR, '.env'))
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.environ.get('SECRET_KEY', 'default-secret-key-change-in-production')
@@ -26,13 +30,14 @@ INSTALLED_APPS = [
     'shelter',
     'rest_framework',
     'corsheaders',
+    'django_cockroachdb',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',  # Añade WhiteNoise
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'corsheaders.middleware.CorsMiddleware',  # Añade CORS headers
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -64,12 +69,35 @@ WSGI_APPLICATION = 'animal_shelter.wsgi.application'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
 DATABASES = {
-    'default': dj_database_url.config(
-        default=os.environ.get('DATABASE_URL'),
-        conn_max_age=600,
-        ssl_require=True,
-    )
+    'default': {
+        'ENGINE': 'django_cockroachdb',
+        'NAME': os.environ.get('DATABASE_NAME', 'animal_shelter'),
+        'USER': os.environ.get('DATABASE_USER', 'root'),
+        'PASSWORD': os.environ.get('DATABASE_PASSWORD', ''),
+        'HOST': os.environ.get('DATABASE_HOST', 'localhost'),
+        'PORT': os.environ.get('DATABASE_PORT', '26257'),
+        'OPTIONS': {
+            'sslmode': 'disable',
+        },
+    }
 }
+
+# Configuración de Heroku
+if 'DATABASE_URL' in os.environ:
+    db_url = os.environ['DATABASE_URL']
+    parsed_url = urlparse(db_url)
+
+    DATABASES['default'] = {
+        'ENGINE': 'django_cockroachdb',
+        'NAME': parsed_url.path[1:],
+        'USER': parsed_url.username,
+        'PASSWORD': parsed_url.password,
+        'HOST': parsed_url.hostname,
+        'PORT': parsed_url.port or '26257',
+        'OPTIONS': {
+            'sslmode': 'verify-full',
+        },
+    }
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
@@ -124,10 +152,6 @@ REST_FRAMEWORK = {
     ]
 }
 
-# Configuración de Heroku
-if 'DATABASE_URL' in os.environ:
-    DATABASES['default']['ENGINE'] = 'django_cockroachdb'
-
 # Configuración de seguridad
 if not DEBUG:
     SECURE_SSL_REDIRECT = True
@@ -139,3 +163,32 @@ if not DEBUG:
     SECURE_HSTS_SECONDS = 31536000
     SECURE_HSTS_INCLUDE_SUBDOMAINS = True
     SECURE_HSTS_PRELOAD = True
+
+# Configuración del modelo de usuario personalizado
+AUTH_USER_MODEL = 'shelter.Usuario'
+
+# Configuración de archivos media
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+# Configuración de logging
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'root': {
+        'handlers': ['console'],
+        'level': 'WARNING',
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console'],
+            'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
+            'propagate': False,
+        },
+    },
+}

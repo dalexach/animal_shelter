@@ -99,3 +99,5 @@ staticfiles/
 # Archivos de logs
 logs
 *.log
+
+cockroach-data
