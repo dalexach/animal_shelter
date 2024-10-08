@@ -1,16 +1,29 @@
 <template>
-  <div class="login">
+  <div class="login-container">
     <h2>Iniciar Sesión</h2>
-    <form @submit.prevent="handleSubmit">
-      <div>
-        <label for="username">Usuario:</label>
-        <input type="text" id="username" v-model="username" required>
+    <form @submit.prevent="handleSubmit" class="login-form">
+      <div class="form-group">
+        <label for="username">Nombre de Usuario:</label>
+        <input
+          id="username"
+          v-model="username"
+          type="text"
+          required
+          placeholder="Ingrese su nombre de usuario"
+        >
       </div>
-      <div>
+      <div class="form-group">
         <label for="password">Contraseña:</label>
-        <input type="password" id="password" v-model="password" required>
+        <input
+          id="password"
+          v-model="password"
+          type="password"
+          required
+          placeholder="Ingrese su contraseña"
+        >
       </div>
-      <button type="submit">Iniciar Sesión</button>
+      <button type="submit" class="login-button">Iniciar Sesión</button>
+      <p v-if="error" class="error-message">{{ error }}</p>
     </form>
   </div>
 </template>
