@@ -74,18 +74,27 @@ WSGI_APPLICATION = "animal_shelter.wsgi.application"
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 # cokcroach
 DATABASES = {
-    "default": dj_database_url.config(
-        default=os.environ.get("DATABASE_URL"),
-        engine="django_cockroachdb",
-        conn_max_age=600,
-        ssl_require=True,
-    )
+    "default": {
+        "ENGINE": "django_cockroachdb",
+        "NAME": os.environ.get("DATABASE_NAME", "defaultdb"),
+        "USER": os.environ.get("DATABASE_USER", "daniela"),
+        "PASSWORD": os.environ.get("DATABASE_PASSWORD", ""),
+        "HOST": os.environ.get(
+            "DATABASE_HOST",
+            "animalsheltering-3617.j77.aws-us-east-1.cockroachlabs.cloud",
+        ),
+        "PORT": os.environ.get("DATABASE_PORT", "26257"),
+        "OPTIONS": {
+            "sslmode": "verify-full",
+            "sslrootcert": os.path.join(BASE_DIR, "certs", "root.crt"),
+        },
+    }
 }
 
 # Configuración adicional para CockroachDB
 DATABASES["default"]["OPTIONS"] = {
     "sslmode": "verify-full",
-    "sslrootcert": "system",
+    "sslrootcert": os.path.join(BASE_DIR, "certs", "root.crt"),
 }
 
 # Password validation
