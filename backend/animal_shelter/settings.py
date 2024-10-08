@@ -67,7 +67,7 @@ WSGI_APPLICATION = 'animal_shelter.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
-
+# cokcroach
 DATABASES = {
     'default': {
         'ENGINE': 'django_cockroachdb',
