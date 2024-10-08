@@ -14,14 +14,15 @@
 </template>
 
 <script>
+import { defineComponent } from 'vue'
 import AnimalList from '@/components/AnimalList.vue'
 
-export default {
+export default defineComponent ({
   name: 'Animals',
   components: {
     AnimalList
   }
-}
+})
 </script>
 
 <style scoped>

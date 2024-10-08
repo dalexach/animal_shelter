@@ -2,15 +2,28 @@
   <div class="animal-list">
     <h2 class="page-title">Lista de Animales</h2>
     <div class="search-bar">
-      <input v-model="searchTerm" type="text" placeholder="Buscar animales..." class="search-input">
+      <input
+        v-model="searchTerm"
+        type="text"
+        placeholder="Buscar animales..."
+        class="search-input"
+        @input="debouncedSearch"
+      >
     </div>
-    <div class="animal-grid">
+    <div v-if="loading" class="loading">Cargando animales...</div>
+    <div v-else-if="error" class="error">{{ error }}</div>
+    <div v-else-if="filteredAnimals.length === 0" class="no-results">
+      No se encontraron animales que coincidan con la búsqueda.
+    </div>
+    <div v-else class="animal-grid">
       <div v-for="animal in filteredAnimals" :key="animal.id" class="animal-card">
         <h3 class="animal-name">{{ animal.nombre }}</h3>
         <p><strong>Especie:</strong> {{ animal.especie }}</p>
-        <p><strong>Edad:</strong> {{ animal.edad }} años</p>
-        <p><strong>Sexo:</strong> {{ animal.sexo === 'M' ? 'Macho' : 'Hembra' }}</p>
-        <router-link :to="{ name: 'AnimalDetails', params: { id: animal.id } }" class="btn btn-primary">Ver Detalles</router-link>
+        <p><strong>Edad:</strong> {{ animal.edad || 'No especificada' }}</p>
+        <p><strong>Sexo:</strong> {{ getSexo(animal.sexo) }}</p>
+        <router-link :to="{ name: 'AnimalDetails', params: { id: animal.id } }" class="btn btn-primary">
+          Ver Detalles
+        </router-link>
       </div>
     </div>
   </div>
@@ -25,13 +38,20 @@ export default {
   setup() {
     const animals = ref([]);
     const searchTerm = ref('');
+    const loading = ref(true);
+    const error = ref(null);
 
     const fetchAnimals = async () => {
       try {
-        const response = await axios.get('https://animalshelter-27633f1524c4.herokuapp.com/animales/');
+        loading.value = true;
+        error.value = null;
+        const response = await axios.get('https://animalshelter-27633f1524c4.herokuapp.com/api/animales/');
         animals.value = response.data;
-      } catch (error) {
-        console.error('Error fetching animals:', error);
+      } catch (err) {
+        console.error('Error fetching animals:', err);
+        error.value = 'Hubo un problema al cargar los animales. Por favor, intenta de nuevo más tarde.';
+      } finally {
+        loading.value = false;
       }
     };
 
@@ -42,12 +62,33 @@ export default {
       );
     });
 
+    const debouncedSearch = (() => {
+      let timeout;
+      return () => {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => {
+          // Aquí podrías implementar una búsqueda en el servidor si es necesario
+          console.log('Searching for:', searchTerm.value);
+        }, 300);
+      };
+    })();
+
+    const getSexo = (sexo) => {
+      if (sexo === 'M') return 'Macho';
+      if (sexo === 'H') return 'Hembra';
+      return 'No especificado';
+    };
+
     onMounted(fetchAnimals);
 
     return {
       animals,
       searchTerm,
-      filteredAnimals
+      filteredAnimals,
+      loading,
+      error,
+      debouncedSearch,
+      getSexo
     };
   }
 };
@@ -119,5 +160,16 @@ export default {
 
 .btn-primary:hover {
   background-color: #2779bd;
+}
+
+.loading, .error, .no-results {
+  text-align: center;
+  padding: 2rem;
+  font-size: 1.2rem;
+  color: #4a5568;
+}
+
+.error {
+  color: #e53e3e;
 }
 </style>
