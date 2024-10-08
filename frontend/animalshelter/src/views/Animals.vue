@@ -2,14 +2,7 @@
   <div class="animals-view">
     <h1 class="page-title">Listado de Animales</h1>
     <router-link to="/add-animal" class="btn btn-primary mb-4">Agregar Animal</router-link>
-    <div class="animal-grid">
-      <div v-for="animal in animals" :key="animal.id" class="animal-card">
-        <h2 class="animal-name">{{ animal.nombre }}</h2>
-        <p><strong>Especie:</strong> {{ animal.especie }}</p>
-        <p><strong>Edad:</strong> {{ animal.edad }} años</p>
-        <router-link :to="{ name: 'AnimalDetails', params: { id: animal.id } }" class="btn btn-secondary">Ver Detalles</router-link>
-      </div>
-    </div>
+    <AnimalList />
   </div>
 </template>
 
@@ -17,7 +10,7 @@
 import { defineComponent } from 'vue'
 import AnimalList from '@/components/AnimalList.vue'
 
-export default defineComponent ({
+export default defineComponent({
   name: 'Animals',
   components: {
     AnimalList
@@ -57,40 +50,7 @@ export default defineComponent ({
   background-color: #2779bd;
 }
 
-.btn-secondary {
-  background-color: #6cb2eb;
-  color: white;
-}
-
-.btn-secondary:hover {
-  background-color: #4e9ae1;
-}
-
 .mb-4 {
   margin-bottom: 1rem;
-}
-
-.animal-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  gap: 1.5rem;
-}
-
-.animal-card {
-  background-color: white;
-  padding: 1.5rem;
-  border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-.animal-name {
-  font-size: 1.25rem;
-  color: #2c5282;
-  margin-bottom: 0.5rem;
-}
-
-.animal-card p {
-  margin-bottom: 0.5rem;
-  color: #4a5568;
 }
 </style>
