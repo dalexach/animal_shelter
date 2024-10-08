@@ -20,6 +20,7 @@ ALLOWED_HOSTS = [
     "localhost",
     "127.0.0.1",
     "animalshelter-27633f1524c4.herokuapp.com",
+    "animal-shelter-jet.vercel.app/",
 ]
 
 # Application definition
