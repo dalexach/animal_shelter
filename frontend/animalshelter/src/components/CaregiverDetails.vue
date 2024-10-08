@@ -1,74 +1,68 @@
 <template>
-  <div v-if="animal" class="animal-details">
-    <h2 class="page-title">Detalles del Animal</h2>
-    <div class="details-card">
-      <p><strong>Nombre:</strong> {{ animal.nombre }}</p>
-      <p><strong>Especie:</strong> {{ animal.especie }}</p>
-      <p><strong>Raza:</strong> {{ animal.raza }}</p>
-      <p><strong>Edad:</strong> {{ animal.edad }}</p>
-      <p><strong>Peso:</strong> {{ animal.peso }} kg</p>
-      <p><strong>Altura:</strong> {{ animal.altura }} cm</p>
-      <p><strong>Sexo:</strong> {{ animal.sexo === 'M' ? 'Macho' : 'Hembra' }}</p>
-    </div>
-    <div class="button-group">
-      <button @click="editAnimal" class="btn btn-primary">Editar</button>
-      <button @click="deleteAnimal" class="btn btn-danger">Eliminar</button>
-    </div>
-  </div>
-  <div v-else class="loading">Cargando...</div>
-</template>
-
-<script>
-// ... (script content remains unchanged)
-</script>
-
-<template>
   <div v-if="caregiver" class="caregiver-details">
-    <h2 class="page-title">Detalles del Cuidador</h2>
-    <div class="details-card">
-      <p><strong>Nombre:</strong> {{ caregiver.nombre }}</p>
-      <p><strong>Apellido:</strong> {{ caregiver.apellido }}</p>
-      <p><strong>Identificación:</strong> {{ caregiver.identificacion }}</p>
-      <p><strong>Teléfono:</strong> {{ caregiver.telefono }}</p>
-      <p><strong>Dirección:</strong> {{ caregiver.direccion }}</p>
-      <p><strong>Fecha de Nacimiento:</strong> {{ formatDate(caregiver.fecha_nacimiento) }}</p>
-    </div>
-    <div class="button-group">
-      <button @click="editCaregiver" class="btn btn-primary">Editar</button>
-      <button @click="deleteCaregiver" class="btn btn-danger">Eliminar</button>
-    </div>
+    <h2>Detalles del Cuidador</h2>
+    <p><strong>Nombre:</strong> {{ caregiver.nombre }}</p>
+    <p><strong>Apellido:</strong> {{ caregiver.apellido }}</p>
+    <p><strong>Identificación:</strong> {{ caregiver.identificacion }}</p>
+    <p><strong>Teléfono:</strong> {{ caregiver.telefono }}</p>
+    <p><strong>Dirección:</strong> {{ caregiver.direccion }}</p>
+    <p><strong>Fecha de Nacimiento:</strong> {{ formatDate(caregiver.fecha_nacimiento) }}</p>
+    <button @click="editCaregiver">Editar</button>
+    <button @click="deleteCaregiver">Eliminar</button>
   </div>
-  <div v-else class="loading">Cargando...</div>
+  <div v-else>
+    <p>Cargando detalles del cuidador...</p>
+  </div>
 </template>
 
 <script>
 import { ref, onMounted } from 'vue'
 import axios from 'axios'
+import { useRoute, useRouter } from 'vue-router'
 
 export default {
   name: 'CaregiverDetails',
-  props: {
-    id: {
-      type: String,
-      required: true
-    }
-  },
-  setup(props) {
+  setup() {
+    const route = useRoute()
+    const router = useRouter()
     const caregiver = ref(null)
 
-    const fetchCaregiverDetails = async () => {
+    const fetchCaregiver = async () => {
       try {
-        const response = await axios.get(`https://animalshelter-27633f1524c4.herokuapp.com/api/cuidadores/${props.id}/`)
+        const response = await axios.get(`https://animalshelter-27633f1524c4.herokuapp.com/api/cuidadores/${route.params.id}/`)
         caregiver.value = response.data
       } catch (error) {
         console.error('Error fetching caregiver details:', error)
       }
     }
 
-    onMounted(fetchCaregiverDetails)
+    const formatDate = (dateString) => {
+      return new Date(dateString).toLocaleDateString()
+    }
+
+    const editCaregiver = () => {
+      // Implementar lógica de edición
+      console.log('Editar cuidador')
+    }
+
+    const deleteCaregiver = async () => {
+      if (confirm('¿Estás seguro de que quieres eliminar este cuidador?')) {
+        try {
+          await axios.delete(`https://animalshelter-27633f1524c4.herokuapp.com/api/cuidadores/${route.params.id}/`)
+          router.push('/caregivers')
+        } catch (error) {
+          console.error('Error deleting caregiver:', error)
+        }
+      }
+    }
+
+    onMounted(fetchCaregiver)
 
     return {
-      caregiver
+      caregiver,
+      formatDate,
+      editCaregiver,
+      deleteCaregiver
     }
   }
 }
@@ -79,72 +73,40 @@ export default {
   max-width: 600px;
   margin: 0 auto;
   padding: 20px;
-}
-
-.page-title {
-  font-size: 2rem;
-  color: #2c5282;
-  margin-bottom: 1.5rem;
-  text-align: center;
-}
-
-.details-card {
-  background-color: white;
-  padding: 2rem;
+  background-color: #f8f9fa;
   border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  margin-bottom: 1.5rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.details-card p {
-  margin-bottom: 0.5rem;
-  color: #4a5568;
-}
-
-.details-card strong {
+h2 {
   color: #2c5282;
+  margin-bottom: 20px;
 }
 
-.button-group {
-  display: flex;
-  justify-content: space-between;
+p {
+  margin-bottom: 10px;
 }
 
-.btn {
-  display: inline-block;
-  padding: 0.5rem 1rem;
-  font-size: 1rem;
-  font-weight: bold;
-  text-align: center;
-  text-decoration: none;
-  border-radius: 4px;
-  transition: background-color 0.3s ease;
-  cursor: pointer;
-}
-
-.btn-primary {
+button {
+  margin-right: 10px;
+  padding: 8px 16px;
   background-color: #3490dc;
   color: white;
   border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
 }
 
-.btn-primary:hover {
+button:hover {
   background-color: #2779bd;
 }
 
-.btn-danger {
+button:last-child {
   background-color: #e53e3e;
-  color: white;
-  border: none;
 }
 
-.btn-danger:hover {
+button:last-child:hover {
   background-color: #c53030;
-}
-
-.loading {
-  text-align: center;
-  color: #4a5568;
-  font-size: 1.2rem;
 }
 </style>
