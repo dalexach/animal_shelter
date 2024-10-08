@@ -32,6 +32,7 @@
 <script>
 import { ref, computed, onMounted } from 'vue';
 import axios from 'axios';
+import { useRouter } from 'vue-router';
 
 export default {
   name: 'AnimalList',
@@ -40,6 +41,7 @@ export default {
     const searchTerm = ref('');
     const loading = ref(true);
     const error = ref(null);
+    const router = useRouter();
 
     const fetchAnimals = async () => {
       try {
@@ -49,7 +51,12 @@ export default {
         animals.value = response.data;
       } catch (err) {
         console.error('Error fetching animals:', err);
-        error.value = 'Hubo un problema al cargar los animales. Por favor, intenta de nuevo más tarde.';
+        if (err.response && err.response.status === 401) {
+          error.value = 'Sesión expirada. Por favor, inicie sesión nuevamente.';
+          router.push('/login');
+        } else {
+          error.value = 'Hubo un problema al cargar los animales. Por favor, intenta de nuevo más tarde.';
+        }
       } finally {
         loading.value = false;
       }
@@ -67,7 +74,6 @@ export default {
       return () => {
         clearTimeout(timeout);
         timeout = setTimeout(() => {
-          // Aquí podrías implementar una búsqueda en el servidor si es necesario
           console.log('Searching for:', searchTerm.value);
         }, 300);
       };

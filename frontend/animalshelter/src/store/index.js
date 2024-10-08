@@ -11,7 +11,11 @@ export default createStore({
     },
     setToken(state, token) {
       state.token = token
-      localStorage.setItem('token', token)
+      if (token) {
+        localStorage.setItem('token', token)
+      } else {
+        localStorage.removeItem('token')
+      }
     },
     logout(state) {
       state.user = null
@@ -26,9 +30,20 @@ export default createStore({
     },
     logout({ commit }) {
       commit('logout')
+    },
+    checkAuth({ commit, state }) {
+      if (state.token) {
+        // Aquí podrías hacer una llamada a la API para verificar si el token es válido
+        // y obtener la información del usuario si es necesario
+        // Por ahora, solo asumiremos que el token es válido si existe
+        commit('setUser', { id: 'placeholder', username: 'Usuario' })
+      } else {
+        commit('logout')
+      }
     }
   },
   getters: {
-    isLoggedIn: state => !!state.token
+    isLoggedIn: state => !!state.token,
+    currentUser: state => state.user
   }
 })

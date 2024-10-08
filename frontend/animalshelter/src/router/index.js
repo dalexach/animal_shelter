@@ -13,44 +13,52 @@ const routes = [
   {
     path: '/',
     name: 'Home',
-    component: Home
+    component: Home,
+    meta: { requiresAuth: true }
   },
   {
     path: '/animals',
     name: 'Animals',
-    component: Animals
+    component: Animals,
+    meta: { requiresAuth: true }
   },
   {
     path: '/animals/:id',
     name: 'AnimalDetails',
     component: AnimalDetails,
-    props: true
+    props: true,
+    meta: { requiresAuth: true }
   },
   {
     path: '/add-animal',
     name: 'AddAnimal',
-    component: AddAnimal
+    component: AddAnimal,
+    meta: { requiresAuth: true }
   },
   {
     path: '/caregivers',
     name: 'Caregivers',
-    component: Caregivers
+    component: Caregivers,
+    meta: { requiresAuth: true }
   },
   {
     path: '/caregivers/:id',
     name: 'CaregiverDetails',
     component: CaregiverDetails,
-    props: true
+    props: true,
+    meta: { requiresAuth: true }
   },
   {
     path: '/add-caregiver',
     name: 'AddCaregiver',
-    component: AddCaregiver
+    component: AddCaregiver,
+    meta: { requiresAuth: true }
   },
   {
     path: '/reports',
     name: 'Reports',
-    component: Reports
+    component: Reports,
+    meta: { requiresAuth: true }
   },
   {
     path: '/login',
@@ -65,15 +73,14 @@ const router = createRouter({
 })
 
 router.beforeEach((to, from, next) => {
-  const publicPages = ['/login']
-  const authRequired = !publicPages.includes(to.path)
+  const requiresAuth = to.matched.some(record => record.meta.requiresAuth)
   const loggedIn = localStorage.getItem('token')
 
-  if (authRequired && !loggedIn) {
-    return next('/login')
+  if (requiresAuth && !loggedIn) {
+    next('/login')
+  } else {
+    next()
   }
-
-  next()
 })
 
 export default router
