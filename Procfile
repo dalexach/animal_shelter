@@ -1,0 +1,1 @@
+web: cd backend && gunicorn animal_shelter.wsgi
