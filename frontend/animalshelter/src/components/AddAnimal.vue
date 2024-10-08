@@ -1,36 +1,39 @@
 <template>
   <div class="add-animal">
-    <h2>Añadir Nuevo Animal</h2>
-    <form @submit.prevent="submitForm">
-      <div>
+    <h2 class="page-title">Agregar Nuevo Animal</h2>
+    <form @submit.prevent="submitForm" class="animal-form">
+      <div class="form-group">
         <label for="nombre">Nombre:</label>
-        <input type="text" id="nombre" v-model="animal.nombre" required>
+        <input v-model="animal.nombre" type="text" id="nombre" required class="form-input">
       </div>
-      <div>
+      <div class="form-group">
         <label for="especie">Especie:</label>
-        <input type="text" id="especie" v-model="animal.especie" required>
+        <input v-model="animal.especie" type="text" id="especie" required class="form-input">
       </div>
-      <div>
-        <label for="habitat">Hábitat:</label>
-        <input type="text" id="habitat" v-model="animal.habitat" required>
+      <div class="form-group">
+        <label for="raza">Raza:</label>
+        <input v-model="animal.raza" type="text" id="raza" class="form-input">
       </div>
-      <div>
-        <label for="tipo_comida">Tipo de Comida:</label>
-        <input type="text" id="tipo_comida" v-model="animal.tipo_comida" required>
+      <div class="form-group">
+        <label for="edad">Edad:</label>
+        <input v-model="animal.edad" type="number" id="edad" required class="form-input">
       </div>
-      <div>
-        <label for="marca_comida">Marca de Comida:</label>
-        <input type="text" id="marca_comida" v-model="animal.marca_comida" required>
+      <div class="form-group">
+        <label for="peso">Peso:</label>
+        <input v-model="animal.peso" type="number" id="peso" step="0.1" required class="form-input">
       </div>
-      <div>
-        <label for="necesidades_aseo">Necesidades de Aseo:</label>
-        <textarea id="necesidades_aseo" v-model="animal.necesidades_aseo" required></textarea>
+      <div class="form-group">
+        <label for="altura">Altura:</label>
+        <input v-model="animal.altura" type="number" id="altura" step="0.1" required class="form-input">
       </div>
-      <div>
-        <label for="necesidades_aseo_habitat">Necesidades de Aseo del Hábitat:</label>
-        <textarea id="necesidades_aseo_habitat" v-model="animal.necesidades_aseo_habitat" required></textarea>
+      <div class="form-group">
+        <label for="sexo">Sexo:</label>
+        <select v-model="animal.sexo" id="sexo" required class="form-select">
+          <option value="M">Macho</option>
+          <option value="H">Hembra</option>
+        </select>
       </div>
-      <button type="submit">Añadir Animal</button>
+      <button type="submit" class="btn btn-primary">Agregar Animal</button>
     </form>
   </div>
 </template>
@@ -73,32 +76,71 @@ export default {
 
 <style scoped>
 .add-animal {
-  max-width: 500px;
+  max-width: 600px;
   margin: 0 auto;
   padding: 20px;
 }
 
-form {
-  display: flex;
-  flex-direction: column;
+.page-title {
+  font-size: 2rem;
+  color: #2c5282;
+  margin-bottom: 1.5rem;
+  text-align: center;
 }
 
-label {
-  margin-top: 10px;
+.animal-form {
+  background-color: white;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-input, textarea {
+.form-group {
+  margin-bottom: 1rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: #4a5568;
+}
+
+.form-input,
+.form-select {
   width: 100%;
-  padding: 5px;
-  margin-top: 5px;
+  padding: 0.5rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 4px;
+  font-size: 1rem;
 }
 
-button {
-  margin-top: 20px;
-  padding: 10px;
-  background-color: #4CAF50;
+.form-select {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3E%3Cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3E%3C/svg%3E");
+  background-position: right 0.5rem center;
+  background-repeat: no-repeat;
+  background-size: 1.5em 1.5em;
+}
+
+.btn {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  font-weight: bold;
+  text-align: center;
+  text-decoration: none;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+  cursor: pointer;
+}
+
+.btn-primary {
+  background-color: #3490dc;
   color: white;
   border: none;
-  cursor: pointer;
+}
+
+.btn-primary:hover {
+  background-color: #2779bd;
 }
 </style>

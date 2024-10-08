@@ -1,32 +1,35 @@
 <template>
   <div class="add-caregiver">
-    <h2>Añadir Nuevo Cuidador</h2>
-    <form @submit.prevent="submitForm">
-      <div>
-        <label for="username">Nombre de Usuario:</label>
-        <input type="text" id="username" v-model="caregiver.username" required>
+    <h2 class="page-title">Agregar Nuevo Cuidador</h2>
+    <form @submit.prevent="submitForm" class="caregiver-form">
+      <div class="form-group">
+        <label for="nombre">Nombre:</label>
+        <input v-model="caregiver.nombre" type="text" id="nombre" required class="form-input">
       </div>
-      <div>
-        <label for="email">Email:</label>
-        <input type="email" id="email" v-model="caregiver.email" required>
+      <div class="form-group">
+        <label for="apellido">Apellido:</label>
+        <input v-model="caregiver.apellido" type="text" id="apellido" required class="form-input">
       </div>
-      <div>
-        <label for="password">Contraseña:</label>
-        <input type="password" id="password" v-model="caregiver.password" required>
+      <div class="form-group">
+        <label for="identificacion">Identificación:</label>
+        <input v-model="caregiver.identificacion" type="text" id="identificacion" required class="form-input">
       </div>
-      <div>
-        <label for="nombre_completo">Nombre Completo:</label>
-        <input type="text" id="nombre_completo" v-model="caregiver.nombre_completo" required>
+      <div class="form-group">
+        <label for="telefono">Teléfono:</label>
+        <input v-model="caregiver.telefono" type="tel" id="telefono" required class="form-input">
       </div>
-      <div>
-        <label for="numero_celular">Número de Celular:</label>
-        <input type="tel" id="numero_celular" v-model="caregiver.numero_celular" required>
+      <div class="form-group">
+        <label for="direccion">Dirección:</label>
+        <input v-model="caregiver.direccion" type="text" id="direccion" required class="form-input">
       </div>
-      <button type="submit">Añadir Cuidador</button>
+      <div class="form-group">
+        <label for="fecha_nacimiento">Fecha de Nacimiento:</label>
+        <input v-model="caregiver.fecha_nacimiento" type="date" id="fecha_nacimiento" required class="form-input">
+      </div>
+      <button type="submit" class="btn btn-primary">Agregar Cuidador</button>
     </form>
   </div>
 </template>
-
 <script>
 import { ref } from 'vue'
 import axios from 'axios'
@@ -61,36 +64,64 @@ export default {
 }
 </script>
 
-
-
 <style scoped>
 .add-caregiver {
-  max-width: 500px;
+  max-width: 600px;
   margin: 0 auto;
   padding: 20px;
 }
 
-form {
-  display: flex;
-  flex-direction: column;
+.page-title {
+  font-size: 2rem;
+  color: #2c5282;
+  margin-bottom: 1.5rem;
+  text-align: center;
 }
 
-label {
-  margin-top: 10px;
+.caregiver-form {
+  background-color: white;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-input {
+.form-group {
+  margin-bottom: 1rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: #4a5568;
+}
+
+.form-input {
   width: 100%;
-  padding: 5px;
-  margin-top: 5px;
+  padding: 0.5rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 4px;
+  font-size: 1rem;
 }
 
-button {
-  margin-top: 20px;
-  padding: 10px;
-  background-color: #4CAF50;
+.btn {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  font-weight: bold;
+  text-align: center;
+  text-decoration: none;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+  cursor: pointer;
+}
+
+.btn-primary {
+  background-color: #3490dc;
   color: white;
   border: none;
-  cursor: pointer;
+}
+
+.btn-primary:hover {
+  background-color: #2779bd;
 }
 </style>

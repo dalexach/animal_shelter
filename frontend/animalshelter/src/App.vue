@@ -1,73 +1,59 @@
 <template>
-  <div id="app">
-    <header>
-      <h1>Refugio de Animales</h1>
-      <nav v-if="isLoggedIn">
-        <router-link to="/">Inicio</router-link> |
-        <router-link to="/animals">Animales</router-link> |
-        <router-link to="/caregivers">Cuidadores</router-link> |
-        <router-link to="/reports">Reportes</router-link> |
-        <a href="#" @click.prevent="logout">Cerrar Sesión</a>
-      </nav>
-    </header>
-    <main>
-      <router-view></router-view>
-    </main>
-  </div>
+  <Layout>
+    <router-view></router-view>
+  </Layout>
 </template>
 
 <script>
-import { computed } from 'vue'
-import { useStore } from 'vuex'
-import { useRouter } from 'vue-router'
+import Layout from '@/components/Layout.vue'
 
 export default {
   name: 'App',
-  setup() {
-    const store = useStore()
-    const router = useRouter()
-
-    const isLoggedIn = computed(() => store.getters.isLoggedIn)
-
-    const logout = () => {
-      store.dispatch('logout')
-      router.push('/login')
-    }
-
-    return {
-      isLoggedIn,
-      logout
-    }
+  components: {
+    Layout
   }
 }
 </script>
 
 <style>
+body {
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+  background-color: #f0f8ff; /* Azul claro */
+}
+
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: #2c3e50;
 }
 
-header {
-  background-color: #4CAF50;
-  color: white;
-  padding: 10px;
+.btn {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  border-radius: 0.25rem;
+  font-weight: bold;
   text-align: center;
-}
-
-nav {
-  margin-top: 10px;
-}
-
-nav a {
-  color: white;
   text-decoration: none;
-  margin: 0 10px;
+  transition: background-color 0.3s ease;
 }
 
-main {
-  padding: 20px;
+.btn-primary {
+  background-color: #3490dc;
+  color: white;
+}
+
+.btn-primary:hover {
+  background-color: #2779bd;
+}
+
+.btn-secondary {
+  background-color: #6cb2eb;
+  color: white;
+}
+
+.btn-secondary:hover {
+  background-color: #4e9ae1;
 }
 </style>

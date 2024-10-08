@@ -1,32 +1,20 @@
 <template>
   <div class="login-container">
-    <h2>Iniciar Sesión</h2>
-    <form @submit.prevent="handleSubmit" class="login-form">
-      <div class="form-group">
-        <label for="username">Nombre de Usuario:</label>
-        <input
-          id="username"
-          v-model="username"
-          type="text"
-          required
-          placeholder="Ingrese su nombre de usuario"
-        >
-      </div>
-      <div class="form-group">
-        <label for="password">Contraseña:</label>
-        <input
-          id="password"
-          v-model="password"
-          type="password"
-          required
-          placeholder="Ingrese su contraseña"
-        >
-      </div>
-      <button type="submit" class="login-button" :disabled="isLoading">
-        {{ isLoading ? 'Iniciando sesión...' : 'Iniciar Sesión' }}
-      </button>
+    <div class="login-card">
+      <h2 class="login-title">Iniciar Sesión</h2>
+      <form @submit.prevent="handleSubmit" class="login-form">
+        <div class="form-group">
+          <label for="username">Usuario:</label>
+          <input v-model="username" type="text" id="username" required class="form-input">
+        </div>
+        <div class="form-group">
+          <label for="password">Contraseña:</label>
+          <input v-model="password" type="password" id="password" required class="form-input">
+        </div>
+        <button type="submit" class="btn btn-primary">Iniciar Sesión</button>
+      </form>
       <p v-if="error" class="error-message">{{ error }}</p>
-    </form>
+    </div>
   </div>
 </template>
 
@@ -77,63 +65,77 @@ export default {
 
 <style scoped>
 .login-container {
-  max-width: 400px;
-  margin: 2rem auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #f7fafc;
+}
+
+.login-card {
+  background-color: white;
   padding: 2rem;
-  border: 1px solid #ddd;
-  border-radius: 8px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 400px;
 }
-h2 {
-  text-align: center;
-  color: #333;
+
+.login-title {
+  font-size: 2rem;
+  color: #2c5282;
   margin-bottom: 1.5rem;
+  text-align: center;
 }
-.login-form
-{
+
+.login-form {
   display: flex;
   flex-direction: column;
 }
-.form-group
-{
+
+.form-group {
   margin-bottom: 1rem;
 }
-label {
+
+.form-group label {
   display: block;
   margin-bottom: 0.5rem;
-  color: #555;
-  }
-input
-{
+  color: #4a5568;
+}
+
+.form-input {
   width: 100%;
   padding: 0.5rem;
-  border: 1px solid #ddd;
-  border-radius: 4px;
   font-size: 1rem;
-  }
-.login-button
-{
-  background-color: #4CAF50;
-  color: white;
-  padding: 0.75rem;
-  border: none;
+  border: 1px solid #e2e8f0;
   border-radius: 4px;
-  cursor: pointer;
-  font-size: 1rem;
-  transition: background-color 0.3s;
-  }
-.login-button:hover
-{
-  background-color: #45a049;
 }
-.error-message
-{
-  color: #ff0000;
+
+.btn {
+  display: inline-block;
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+  font-weight: bold;
   text-align: center;
-  margin-top: 1rem;
+  text-decoration: none;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+  cursor: pointer;
 }
-.login-button:disabled {
-  background-color: #cccccc;
-  cursor: not-allowed;
+
+.btn-primary {
+  background-color: #3490dc;
+  color: white;
+  border: none;
+}
+
+.btn-primary:hover {
+  background-color: #2779bd;
+}
+
+.error-message {
+  color: #e53e3e;
+  margin-top: 1rem;
+  text-align: center;
 }
 </style>

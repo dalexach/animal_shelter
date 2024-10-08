@@ -1,19 +1,44 @@
 <template>
-  <div class="caregiver-details" v-if="caregiver">
-    <h2>{{ caregiver.nombre_completo }}</h2>
-    <p><strong>Email:</strong> {{ caregiver.email }}</p>
-    <p><strong>Número de Celular:</strong> {{ caregiver.numero_celular }}</p>
-    <h3>Animales a Cargo</h3>
-    <ul v-if="caregiver.animales && caregiver.animales.length">
-      <li v-for="animal in caregiver.animales" :key="animal.id">
-        <router-link :to="{ name: 'AnimalDetails', params: { id: animal.id } }">
-          {{ animal.nombre }}
-        </router-link>
-      </li>
-    </ul>
-    <p v-else>Este cuidador no tiene animales asignados actualmente.</p>
+  <div v-if="animal" class="animal-details">
+    <h2 class="page-title">Detalles del Animal</h2>
+    <div class="details-card">
+      <p><strong>Nombre:</strong> {{ animal.nombre }}</p>
+      <p><strong>Especie:</strong> {{ animal.especie }}</p>
+      <p><strong>Raza:</strong> {{ animal.raza }}</p>
+      <p><strong>Edad:</strong> {{ animal.edad }}</p>
+      <p><strong>Peso:</strong> {{ animal.peso }} kg</p>
+      <p><strong>Altura:</strong> {{ animal.altura }} cm</p>
+      <p><strong>Sexo:</strong> {{ animal.sexo === 'M' ? 'Macho' : 'Hembra' }}</p>
+    </div>
+    <div class="button-group">
+      <button @click="editAnimal" class="btn btn-primary">Editar</button>
+      <button @click="deleteAnimal" class="btn btn-danger">Eliminar</button>
+    </div>
   </div>
-  <div v-else>Cargando detalles del cuidador...</div>
+  <div v-else class="loading">Cargando...</div>
+</template>
+
+<script>
+// ... (script content remains unchanged)
+</script>
+
+<template>
+  <div v-if="caregiver" class="caregiver-details">
+    <h2 class="page-title">Detalles del Cuidador</h2>
+    <div class="details-card">
+      <p><strong>Nombre:</strong> {{ caregiver.nombre }}</p>
+      <p><strong>Apellido:</strong> {{ caregiver.apellido }}</p>
+      <p><strong>Identificación:</strong> {{ caregiver.identificacion }}</p>
+      <p><strong>Teléfono:</strong> {{ caregiver.telefono }}</p>
+      <p><strong>Dirección:</strong> {{ caregiver.direccion }}</p>
+      <p><strong>Fecha de Nacimiento:</strong> {{ formatDate(caregiver.fecha_nacimiento) }}</p>
+    </div>
+    <div class="button-group">
+      <button @click="editCaregiver" class="btn btn-primary">Editar</button>
+      <button @click="deleteCaregiver" class="btn btn-danger">Eliminar</button>
+    </div>
+  </div>
+  <div v-else class="loading">Cargando...</div>
 </template>
 
 <script>
@@ -56,25 +81,70 @@ export default {
   padding: 20px;
 }
 
-h3 {
-  margin-top: 20px;
+.page-title {
+  font-size: 2rem;
+  color: #2c5282;
+  margin-bottom: 1.5rem;
+  text-align: center;
 }
 
-ul {
-  list-style-type: none;
-  padding: 0;
+.details-card {
+  background-color: white;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  margin-bottom: 1.5rem;
 }
 
-li {
-  margin-bottom: 10px;
+.details-card p {
+  margin-bottom: 0.5rem;
+  color: #4a5568;
 }
 
-a {
-  color: #4CAF50;
+.details-card strong {
+  color: #2c5282;
+}
+
+.button-group {
+  display: flex;
+  justify-content: space-between;
+}
+
+.btn {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  font-weight: bold;
+  text-align: center;
   text-decoration: none;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+  cursor: pointer;
 }
 
-a:hover {
-  text-decoration: underline;
+.btn-primary {
+  background-color: #3490dc;
+  color: white;
+  border: none;
+}
+
+.btn-primary:hover {
+  background-color: #2779bd;
+}
+
+.btn-danger {
+  background-color: #e53e3e;
+  color: white;
+  border: none;
+}
+
+.btn-danger:hover {
+  background-color: #c53030;
+}
+
+.loading {
+  text-align: center;
+  color: #4a5568;
+  font-size: 1.2rem;
 }
 </style>

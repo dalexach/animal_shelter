@@ -1,23 +1,21 @@
 <template>
-  <div class="animal-details" v-if="animal">
-    <h2>{{ animal.nombre }}</h2>
-    <div class="details-grid">
-      <div>
-        <p><strong>Especie:</strong> {{ animal.especie }}</p>
-        <p><strong>Hábitat:</strong> {{ animal.habitat }}</p>
-        <p><strong>Tipo de Comida:</strong> {{ animal.tipo_comida }}</p>
-        <p><strong>Marca de Comida:</strong> {{ animal.marca_comida }}</p>
-      </div>
-      <div>
-        <h3>Necesidades de Aseo</h3>
-        <p>{{ animal.necesidades_aseo }}</p>
-        <h3>Necesidades de Aseo del Hábitat</h3>
-        <p>{{ animal.necesidades_aseo_habitat }}</p>
-      </div>
+  <div v-if="animal" class="animal-details">
+    <h2 class="page-title">Detalles del Animal</h2>
+    <div class="details-card">
+      <p><strong>Nombre:</strong> {{ animal.nombre }}</p>
+      <p><strong>Especie:</strong> {{ animal.especie }}</p>
+      <p><strong>Raza:</strong> {{ animal.raza }}</p>
+      <p><strong>Edad:</strong> {{ animal.edad }}</p>
+      <p><strong>Peso:</strong> {{ animal.peso }} kg</p>
+      <p><strong>Altura:</strong> {{ animal.altura }} cm</p>
+      <p><strong>Sexo:</strong> {{ animal.sexo === 'M' ? 'Macho' : 'Hembra' }}</p>
     </div>
-    <HealthRecord :animalId="animal.id" />
+    <div class="button-group">
+      <button @click="editAnimal" class="btn btn-primary">Editar</button>
+      <button @click="deleteAnimal" class="btn btn-danger">Eliminar</button>
+    </div>
   </div>
-  <div v-else>Cargando detalles del animal...</div>
+  <div v-else class="loading">Cargando...</div>
 </template>
 
 <script>
@@ -59,18 +57,75 @@ export default {
 
 <style scoped>
 .animal-details {
-  max-width: 800px;
+  max-width: 600px;
   margin: 0 auto;
   padding: 20px;
 }
 
-.details-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 20px;
+.page-title {
+  font-size: 2rem;
+  color: #2c5282;
+  margin-bottom: 1.5rem;
+  text-align: center;
 }
 
-h3 {
-  margin-top: 20px;
+.details-card {
+  background-color: white;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  margin-bottom: 1.5rem;
+}
+
+.details-card p {
+  margin-bottom: 0.5rem;
+  color: #4a5568;
+}
+
+.details-card strong {
+  color: #2c5282;
+}
+
+.button-group {
+  display: flex;
+  justify-content: space-between;
+}
+
+.btn {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  font-weight: bold;
+  text-align: center;
+  text-decoration: none;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+  cursor: pointer;
+}
+
+.btn-primary {
+  background-color: #3490dc;
+  color: white;
+  border: none;
+}
+
+.btn-primary:hover {
+  background-color: #2779bd;
+}
+
+.btn-danger {
+  background-color: #e53e3e;
+  color: white;
+  border: none;
+}
+
+.btn-danger:hover {
+  background-color: #c53030;
+}
+
+.loading {
+  text-align: center;
+  color: #4a5568;
+  font-size: 1.2rem;
 }
 </style>
