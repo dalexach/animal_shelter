@@ -3,7 +3,7 @@ from django.contrib import admin
 from rest_framework import permissions
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
-from ..shelter.custom_token import CustomTokenObtainPairView
+from shelter.custom_token import CustomTokenObtainPairView
 from rest_framework_simplejwt.views import (
     TokenRefreshView,
 )
