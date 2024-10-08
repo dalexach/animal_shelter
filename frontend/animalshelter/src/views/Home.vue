@@ -2,17 +2,17 @@
   <div class="home">
     <h1>Bienvenido al Refugio de Animales</h1>
     <p>Aquí puedes gestionar los animales, cuidadores y reportes del refugio.</p>
-    <Dashboard />
+    <!-- <Dashboard /> -->
   </div>
 </template>
 
 <script>
-import Dashboard from '@/components/Dashboard.vue'
+// import Dashboard from '@/views/Dashboard.vue'
 
 export default {
   name: 'Home',
   components: {
-    Dashboard
+    // Dashboard
   }
 }
 </script>
