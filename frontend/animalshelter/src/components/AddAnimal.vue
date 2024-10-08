@@ -11,26 +11,51 @@
         <input v-model="animal.especie" type="text" id="especie" required>
       </div>
       <div class="form-group">
-        <label for="raza">Raza:</label>
-        <input v-model="animal.raza" type="text" id="raza">
+        <label for="habitat">Hábitat:</label>
+        <input v-model="animal.habitat" type="text" id="habitat" required>
       </div>
       <div class="form-group">
-        <label for="edad">Edad:</label>
-        <input v-model="animal.edad" type="number" id="edad" required>
+        <label for="tipo_comida">Tipo de Comida:</label>
+        <input v-model="animal.tipo_comida" type="text" id="tipo_comida" required>
       </div>
       <div class="form-group">
-        <label for="peso">Peso (kg):</label>
-        <input v-model="animal.peso" type="number" step="0.1" id="peso" required>
+        <label for="marca_comida">Marca de Comida:</label>
+        <input v-model="animal.marca_comida" type="text" id="marca_comida" required>
       </div>
       <div class="form-group">
-        <label for="altura">Altura (cm):</label>
-        <input v-model="animal.altura" type="number" step="0.1" id="altura" required>
+        <label for="necesidades_aseo">Necesidades de Aseo:</label>
+        <textarea v-model="animal.necesidades_aseo" id="necesidades_aseo" required></textarea>
+      </div>
+      <div class="form-group">
+        <label for="necesidades_aseo_habitat">Necesidades de Aseo del Hábitat:</label>
+        <textarea v-model="animal.necesidades_aseo_habitat" id="necesidades_aseo_habitat" required></textarea>
+      </div>
+      <div class="form-group">
+        <label for="fecha_nacimiento">Fecha de Nacimiento:</label>
+        <input v-model="animal.fecha_nacimiento" type="date" id="fecha_nacimiento">
       </div>
       <div class="form-group">
         <label for="sexo">Sexo:</label>
-        <select v-model="animal.sexo" id="sexo" required>
+        <select v-model="animal.sexo" id="sexo">
           <option value="M">Macho</option>
           <option value="H">Hembra</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="edad">Edad:</label>
+        <input v-model="animal.edad" type="number" id="edad">
+      </div>
+      <div class="form-group">
+        <label for="peso_actual">Peso Actual (kg):</label>
+        <input v-model="animal.peso_actual" type="number" step="0.1" id="peso_actual">
+      </div>
+      <div class="form-group">
+        <label for="estado">Estado:</label>
+        <select v-model="animal.estado" id="estado">
+          <option value="SANO">Sano</option>
+          <option value="ENFERMO">Enfermo</option>
+          <option value="EN_TRATAMIENTO">En tratamiento</option>
+          <option value="CUARENTENA">En cuarentena</option>
         </select>
       </div>
       <button type="submit" class="submit-btn">Agregar Animal</button>
@@ -48,11 +73,16 @@ export default {
     const animal = ref({
       nombre: '',
       especie: '',
-      raza: '',
+      habitat: '',
+      tipo_comida: '',
+      marca_comida: '',
+      necesidades_aseo: '',
+      necesidades_aseo_habitat: '',
+      fecha_nacimiento: null,
+      sexo: '',
       edad: null,
-      peso: null,
-      altura: null,
-      sexo: ''
+      peso_actual: null,
+      estado: 'SANO'
     })
 
     const submitForm = async () => {
@@ -64,11 +94,16 @@ export default {
         animal.value = {
           nombre: '',
           especie: '',
-          raza: '',
+          habitat: '',
+          tipo_comida: '',
+          marca_comida: '',
+          necesidades_aseo: '',
+          necesidades_aseo_habitat: '',
+          fecha_nacimiento: null,
+          sexo: '',
           edad: null,
-          peso: null,
-          altura: null,
-          sexo: ''
+          peso_actual: null,
+          estado: 'SANO'
         }
         alert('Animal agregado exitosamente')
       } catch (error) {
@@ -96,7 +131,7 @@ export default {
 
 <style scoped>
 .add-animal {
-  max-width: 500px;
+  max-width: 600px;
   margin: 0 auto;
   padding: 20px;
   background-color: #f0f8ff; /* Alice Blue */
@@ -125,7 +160,7 @@ label {
   color: #2b6cb0; /* Medium Blue */
 }
 
-input, select {
+input, select, textarea {
   width: 100%;
   padding: 8px;
   border: 1px solid #90cdf4; /* Light Blue */
@@ -133,7 +168,7 @@ input, select {
   background-color: #ebf8ff; /* Very Light Blue */
 }
 
-input:focus, select:focus {
+input:focus, select:focus, textarea:focus {
   outline: none;
   border-color: #3182ce; /* Bright Blue */
   box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.5); /* Blue glow */
